@@ -162,13 +162,18 @@ try {
 
     // Names of the processes currently waiting in the queue (used to display the ready queue)
     public String snapshot() {
-        // TODO Feature 1: protect this critical section
+        // Feature 1: I used a lock to read the ready queue.
+queueLock.lock();
+try {
         StringBuilder sb = new StringBuilder();
         for (Thread t : list) {
             if (sb.length() > 0) sb.append(" → ");
             sb.append(map.get(t).getName());
         }
         return sb.length() == 0 ? "empty" : sb.toString();
+    } finally {
+    queueLock.unlock();
+}
     }
 }
 
