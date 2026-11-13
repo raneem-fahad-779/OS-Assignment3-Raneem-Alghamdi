@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
-// TODO (Feature 1 and Feature 2): import java.util.concurrent.locks.ReentrantLock;
+// Feature 1: I added ReentrantLock to protect the ready queue.
+import java.util.concurrent.locks.ReentrantLock;
 // TODO (Feature 3):               import java.util.concurrent.Semaphore;
 
 // ANSI Color Codes for enhanced terminal output (same as Assignment 1)
