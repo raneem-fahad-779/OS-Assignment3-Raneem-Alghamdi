@@ -135,7 +135,9 @@ try {
 
     // Remove and return the thread at the head of the queue (or null if the queue is empty)
     public Thread poll() {
-        // TODO Feature 1: protect this critical section
+        // Feature 1: I used a lock when taking a process from the queue.
+queueLock.lock();
+try {
         if (list.isEmpty()) {
             return null;
         }
@@ -143,6 +145,9 @@ try {
         RaceWindow.pause();                 //    <- another CPU can read the SAME head here
         list.removeFirst();                 // 2) remove the head (it may be a different thread by now!)
         return head;
+    } finally {
+    queueLock.unlock();
+}
     }
 
     public Process processOf(Thread thread) {
