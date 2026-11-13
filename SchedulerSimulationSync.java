@@ -151,8 +151,13 @@ try {
     }
 
     public Process processOf(Thread thread) {
-        // TODO Feature 1: protect this access
+        // Feature 1: I used a lock to read the process.
+queueLock.lock();
+try {
         return map.get(thread);
+    } finally {
+    queueLock.unlock();
+}
     }
 
     // Names of the processes currently waiting in the queue (used to display the ready queue)
