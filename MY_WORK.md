@@ -132,68 +132,68 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
-**What I did**:
+### Entry 1 - [November 13, 2026, 7:08 AM]
+**What I did**: I changed my student ID in the starter code
 
-**Details**:
+**Details**: I opened SchedulerSimulationSync.java and changed the student ID to my university ID. I saved the change on GitHub
 
-**Challenges**:
+**Challenges**: I needed to make sure I changed the correct number without changing other parts of the code
 
-**Solution**:
+**Solution**: I checked the studentID line and reviewed my change before saving it
 
-**Time spent**:
-
----
-
-### Entry 2 - [Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Time spent**: 30 minutes
 
 ---
 
-### Entry 3 - [Date and Time]
-**What I did**:
+### Entry 2 - [November 13, 2026, 11:23 AM]
+**What I did**: I started Feature 1 by adding a lock to the ready queue
 
-**Details**:
+**Details**: I imported ReentrantLock and added queueLock inside the ReadyQueue class
 
-**Challenges**:
+**Challenges**: At first, I needed to understand where to add the import and where to declare the lock
 
-**Solution**:
+**Solution**: I checked the code structure and added each line in its correct place
 
-**Time spent**:
-
----
-
-### Entry 4 - [Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Time spent**: 30 minutes
 
 ---
 
-### Entry 5 - [Date and Time]
-**What I did**:
+### Entry 3 - [November 13, 2026, 11:36 AM]
+**What I did**: I protected the ready queue methods using queueLock
 
-**Details**:
+**Details**: I added the lock to add(), poll(), processOf(), and snapshot(). I used try-finally to release the lock
 
-**Challenges**:
+**Challenges**: I had to be careful with the brackets and make sure the lock covered the correct code
 
-**Solution**:
+**Solution**: I checked each method separately and reviewed the brackets before saving the changes
 
-**Time spent**:
+**Time spent**: 1 hour
+
+---
+
+### Entry 4 - [November 14, 2026, 7:49 AM]
+**What I did**: I completed Feature 2 by protecting the shared statistics
+
+**Details**: I added statsLock in SharedStats. I used a single lock to protect contextSwitchCount, completedProcessCount, and totalServiceTime during updates and reads
+
+**Challenges**: I needed to protect both the update and read methods without changing the original code
+
+**Solution**: I added lock(), try, finally, and unlock() to the six methods. I checked them one by one
+
+**Time spent**: 1 hour
+
+---
+
+### Entry 5 - [November 14, 2026, 9:00 AM]
+**What I did**: I completed the code changes for Feature 3 using a Semaphore
+
+**Details**: I imported Semaphore and changed the CPU waiting logic. I also added a way to wake up waiting CPU threads when all processes are finished
+
+**Challenges**: I needed to understand how the Semaphore controls CPU waiting and how the threads can finish safely
+
+**Solution**: I used the Semaphore to control waiting and added wake-up logic for the CPU threads
+
+**Time spent**: 1 hour
 
 ---
 
@@ -214,13 +214,13 @@
 
 > 💡 **TIP:** Fill this in **last**, after all entries are written.
 
-**Total time spent on assignment**: [X hours]
+**Total time spent on assignment**: 4 hours 
 
-**Most challenging part**:
+**Most challenging part**:The most challenging part was adding locks in the correct places and checking the brackets in each method
 
-**Most interesting learning**:
+**Most interesting learning**:I learned how ReentrantLock protects shared data and how Semaphore helps CPU threads wait without busy waiting
 
-**What I would do differently next time**:
+**What I would do differently next time**:I would organize my code changes earlier and check each method carefully before moving to the next feature
 
 ---
 
