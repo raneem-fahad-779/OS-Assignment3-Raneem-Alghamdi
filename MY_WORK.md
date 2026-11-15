@@ -240,7 +240,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+I learned that synchronization is important when threads share the same data. Without it, two threads might change the data at the same time and give wrong results. In my code, I used queueLock to protect the ready queue. I used try-finally to make sure the lock is always released. I also used statsLock to protect the three shared counters. I learned that a semaphore helps CPU threads wait without busy waiting.
 
 ## Question 2: What was the most challenging part of this assignment?
 
@@ -248,7 +248,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+The hardest part for me was adding locks to the correct places in the code. I had to protect four methods in the ReadyQueue class. Each method was different, so I needed to be careful. I was also worried about putting the brackets in the wrong place. I used try-finally because I needed to release the lock correctly. This part took time because I had to check each method separately
 
 ## Question 3: How did you overcome the challenges you faced?
 
@@ -256,7 +256,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+I started by reading the code and finding the methods I needed to change. I added queueLock to one method at a time. After each change, I checked the brackets and the lock statements. I did the same thing when I added statsLock to the six methods in SharedStats. I also tried to understand how Semaphore controls CPU waiting. When I ran the program, the output showed zero busy-waiting polls, which helped me see that the waiting logic was working.
 
 ## Question 4: Where can synchronization concepts be applied in real-world applications?
 
@@ -264,7 +264,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+Synchronization can be used in many real applications. For example, in a banking app, two people might try to change the same account balance at the same time. A lock can help protect the balance from incorrect updates. It can also be used in ticket booking so two people do not book the same seat. A Semaphore can help control how many tasks use a shared resource. This is similar to my CPU scheduling code, where I used locks for shared data and a semaphore for waiting
 
 ### Optional: What would you like to learn more about?
 
