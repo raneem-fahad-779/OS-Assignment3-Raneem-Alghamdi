@@ -298,20 +298,36 @@ Synchronization can be used in many real applications. For example, in a banking
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+When I ran the original starter code, CPU-1 and CPU-2 both picked P1 at the same time, and CPU-2 showed an IllegalThreadStateException. The program did not finish, and the watchdog stopped it after 57 seconds. The verification showed 33 context switches instead of 36 and only 16 completed processes instead of 17. This happened because the shared queue was not protected so that both CPUs could access the same process at the same time. RaceWindow.pause() makes the race condition easier to see, but it can still happen without it because both CPUs run at the same time.
 
 Verification block of the **original starter**:
 ```
-[Paste the verification block (or the exception/watchdog message) of the starter here]
+Exception in thread "CPU-2" java.lang.IllegalThreadStateException
+    at java.base/java.lang.Thread.start(Thread.java:1389)
+    at CpuWorker.run(SchedulerSimulationSync.java:283)
+
+? WATCHDOG: the simulation did not finish (57 s). A process was lost, or a CPU is blocked forever, or the 'completed' counter lost an update.
+
+??? VERIFICATION (expected values are computed from YOUR seed) ???
+Context switches (quanta executed)    expected 36      observed 33      ? MISMATCH
+Completed processes                   expected 17      observed 16      ? MISMATCH
+Total service time (ms)               expected 141718  observed 131464  ? MISMATCH
+Busy-waiting polls (must be 0)        expected 0       observed 1508    ? MISMATCH
+? At least one check failed (see the ? lines above): a race condition or busy waiting is still present.
 ```
 
 Verification block of **my final version**:
 ```
-[Paste the verification block of your final version here (all lines ✔)]
+??? VERIFICATION (expected values are computed from YOUR seed) ???
+Context switches (quanta executed)    expected 36      observed 36      ?
+Completed processes                   expected 17      observed 17      ?
+Total service time (ms)               expected 141718  observed 141718  ?
+Busy-waiting polls (must be 0)        expected 0       observed 0       ?
+? All shared values are consistent.
 ```
 
 **Explanation of the timeline:**
-[Explain the lost update step by step.]
+For example, CPU-1 reads contextSwitchCount as 12, and CPU-2 also reads 12 before it is updated. CPU-1 adds 1 and saves 13. Then CPU-2 adds 1 to the old value and also saves 13 instead of 14. This means one update is lost because both CPUs accessed the same variable without a lock. I used ReentrantLock to protect the shared counters so that only one CPU can update them at a time.
 
 ## Question 2: Critical Sections and Lock Granularity
 
@@ -321,12 +337,12 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+I protected the ready queue methods add(), poll(), processOf(), and snapshot() using queueLock. I also used one statsLock to protect the three shared counters and their update and read methods because it was easier to manage, but separate locks could allow more concurrent updates. I used different locks for the queue and statistics so the CPUs do not block each other when working on different shared data. The locks provide mutual exclusion because only one thread can enter each protected section at a time, and progress is possible when the lock becomes available. However, the default ReentrantLock is not fair, so bounded waiting is not guaranteed because one thread might wait longer than another.
 
 | Critical section (variable / method) | Lock used | Why it needs protection |
 |---|---|---|
-| [e.g., `ReadyQueue.poll()`] | [lock name] | [reason] |
-| [...] | [...] | [...] |
+| ReadyQueue: add(), poll(), processOf(), snapshot()  | queueLock | To protect the queue and prevent two CPUs from taking the same process. |
+| SharedStats: contextSwitchCount, completedProcessCount, totalServiceTime (updates and reads) |  statsLock  |  To prevent lost updates and keep the statistics correct. |
 
 ## Question 3: Busy Waiting vs Semaphore
 
@@ -336,7 +352,7 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+In the starter code, the CPUs kept checking the empty ready queue, which wasted CPU time, and my original output showed 1508 busy-waiting polls. In my final code, the counting Semaphore represents the number of available processes in the ready queue, so a CPU waits using acquire() instead of repeatedly checking the queue. The Semaphore starts at 0 because no processes have been added yet, and after the initial add() calls for 17 processes, its value becomes 17 before any CPU takes a permit. When a process is added, release() increases the permits, and when a CPU takes a process, acquire() decreases them. The last CPU calls release(totalCPUs) to wake up any CPUs still waiting so they can exit; without it, a CPU could stay blocked forever, and the program might not finish.
 
 ## Question 4: Classical Problems and Deadlock
 
@@ -347,13 +363,13 @@ Verification block of **my final version**:
 **Your Answer:** *(3-5 sentences)*
 
 **Classical problem and roles**:
-[Name the problem; who is the producer, who is the consumer?]
+This is the Producer-Consumer problem. The main thread is a producer because it adds processes, while the CPUs are consumers when they take processes and producers when they re-enqueue unfinished processes.
 
 **Semaphores for a bounded queue (name and initial value)**:
-[Name the three semaphores and their initial values.]
+For a bounded queue with capacity K, I would use empty = K to count available slots, full = 0 to count processes ready to run, and mutex = 1 to protect the queue.
 
 **Deadlock scenario and prevention**:
-[Describe the scenario and the necessary condition you would break.]
+Deadlock can occur if a producer holds the mutex while waiting for an empty slot in a full queue, because the consumer needs the same mutex to remove an item. I would prevent this by breaking the hold-and-wait condition: the producer waits for an empty slot before taking the mutex.
 
 ## Summary
 
