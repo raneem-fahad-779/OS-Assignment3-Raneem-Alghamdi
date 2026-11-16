@@ -374,13 +374,13 @@ Deadlock can occur if a producer holds the mutex while waiting for an empty slot
 ## Summary
 
 **Key concepts I understood through these questions:**
-1.
-2.
-3.
+1.I understood why shared variables need protection when multiple threads use them.
+2.I learned how locks prevent two CPUs from accessing the ready queue at the same time.
+3. I understood how a counting Semaphore makes CPUs wait without busy waiting.
 
 **Concepts I need to study more:**
-1.
-2.
+1. I need to learn more about the four deadlock conditions.
+2.I want to practice choosing the correct lock granularity.
 
 ---
 
